@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8">
+</head>
+<body>
+<div style="width: 600px;height: 500px;margin: 30px auto;text-align: center">
+<h1>websocket聊天系统</h1>
+<textarea id="msg" rows="6" cols="50"></textarea><br>
+<input type="button" value="发送" onclick="send()">
+<div id="list" style="width: 500px;border:  1px solid gray; height: 300px;margin: 10px auto;overflow: auto;">
+	
+</div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+	var ws = new WebSocket("ws://127.0.0.1:8080");
+	ws.onopen = function(){
+		var data="系统消息：建立连接成功";
+		list(data);
+	}
+	ws.onmessage = function(e){
+		var data="服务器消息:" + e.data;
+		list(data);
+	}
+	ws.onerror = function(){
+		var data="出错了，请退出重试";
+		list(data);
+	}
+	function send()
+	{
+		var msg=document.getElementById("msg").value;
+		ws.send(msg);
+		var data="客户端消息："+msg;
+		list(data);
+		document.getElementById("msg").value='';
+	}
+	function list(data)
+	{
+		var p=document.createElement("p");
+		p.innerHTML=data;
+		var box=document.getElementById("list");
+		box.appendChild(p);
+	}
+</script>
